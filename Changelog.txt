@@ -1,3 +1,6 @@
+v1.3 - November 25th, 2017
+o Added ability to suppress "Member is a Spam" error from Stop Forum Spam mod.
+
 v1.2 - September 14th, 2017
 o Fixed syntax error found in [b]Sources/LogInOut.php[/b].
 
