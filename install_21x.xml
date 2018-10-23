@@ -3,7 +3,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>dougiefresh:NoLogUser</id>
 <name>No Log Certain User Errors</name>
-<version>1.1</version>
+<version>1.2</version>
 
 <file name="$sourcedir/LogInOut.php">
 	<operation>
@@ -15,7 +15,7 @@
 		<search position="replace"><![CDATA[elseif ($activation_status == 3)
 		fatal_lang_error('still_awaiting_approval', 'user');]]></search>
 		<add><![CDATA[elseif ($activation_status == 3)
-		fatal_lang_error('still_awaiting_approval', (!empty($modSettings['log_activation_error']) ? 'user' : false));]]></add>
+		fatal_lang_error('still_awaiting_approval', (!empty($modSettings['log_activation_error']) ? 'user' : false)));]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[{

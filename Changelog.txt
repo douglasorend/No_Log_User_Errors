@@ -1,3 +1,6 @@
+v1.2 - September 14th, 2017
+o Fixed syntax error found in [b]Sources/LogInOut.php[/b].
+
 v1.1 - September 23rd, 2016
 o Added ability to block "attachment timeout" errors in the log.
 o Removed the "log if user is banned" option because SMF source didn't log those errors.
