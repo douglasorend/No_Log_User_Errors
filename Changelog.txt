@@ -1,0 +1,5 @@
+v1.0.1 - February 25th, 2016
+o Fixed documentation so that the correct area for admin controls are shown.
+
+v1.0 - April 25th, 2015
+o Initial Release to the Public
