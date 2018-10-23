@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]NO LOG CERTAIN USER ERRORS v1.0.1[/b][/size][/color]
+[center][color=red][size=16pt][b]NO LOG CERTAIN USER ERRORS v1.1[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] -> [url=http://custom.simplemachines.org/mods/index.php?mod=4041]Link to Mod[/url]
 [/center]
 [hr]
@@ -11,11 +11,13 @@ This mod adds several new settings to the forum to allow admin to suppress some 
 New settings are in [b]Admin[/b] => [b]Configuration[/b] => [b]Security and Moderation[/b] => [b]General[/b]:
 o Log activation errors
 o Log incorrect password errors
-o Log user banned for whatever reason errors
 o Log Restricted Email Provider errors (only if [url=http://custom.simplemachines.org/mods/index.php?mod=1493]Restrict Email Providers on Registration[/url] mod is installed)
 
+New settings are in [b]Admin[/b] => [b]Forum[/b] => [b]Attachments and Avatars[/b] => [b]Attachment Settings[/b]:
+o Log attachment timeout errors
+
 [color=blue][b][size=12pt][u]Compatibility Notes[/u][/size][/b][/color]
-This mod was tested on SMF 2.0.9, but should work on SMF 2.1 Beta 1, as well as SMF 2.0 and up.  SMF 1.x is not and will not be supported.
+This mod was tested on SMF 2.0.11, but should work on SMF 2.1 Beta 1, as well as SMF 2.0 and up.  SMF 1.x is not and will not be supported.
 
 If you use [url=http://custom.simplemachines.org/mods/index.php?mod=1493]Restrict Email Providers on Registration[/url], it should be installed prior to installation of this mod.
 

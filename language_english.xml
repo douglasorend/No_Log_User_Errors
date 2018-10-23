@@ -5,14 +5,21 @@
 <name>No Log Certain User Errors</name>
 <version>1.0.1</version>
 
+<file name="$languagedir/Admin.english.php">
+	<operation>
+		<search position="end" />
+		<add><![CDATA[
+$txt['log_attach_timeout_error'] = 'Log Attachment Timeout errors?';
+]]></add>
+	</operation>
+</file>
 <file name="$languagedir/ManageSettings.english.php">
 	<operation>
 		<search position="end" />
-		<add><![CDATA[$txt['log_activation_error'] = 'Log User Activation errors';
+		<add><![CDATA[
+$txt['log_activation_error'] = 'Log User Activation errors';
 $txt['log_incorrect_password_error'] = 'Log Incorrect Password errors';
-$txt['log_is_banned_error'] = 'Log Banned Users errors';
 $txt['log_email_provider_error'] = 'Log Email Provider errors';
-
 ]]></add>
 	</operation>
 </file>

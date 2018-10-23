@@ -3,21 +3,8 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>dougiefresh:NoLogUser</id>
 <name>No Log Certain User Errors</name>
-<version>1.0.1</version>
+<version>1.1</version>
 
-<file name="$sourcedir/ManageSettings.php">
-	<operation>
-		<search position="replace"><![CDATA[array('check', 'securityDisable'),
-		'',]]></search>
-		<add><![CDATA[array('check', 'securityDisable'),
-		'',
-		array('check', 'log_activation_error'),
-		array('check', 'log_incorrect_password_error'),
-		array('check', 'log_is_banned_error'),
-		array('check', 'log_email_provider_error'),
-		'',]]></add>
-	</operation>
-</file>
 <file name="$sourcedir/LogInOut.php">
 	<operation>
 		<search position="after"><![CDATA[log_error($txt['activate_not_completed1']]]></search>
@@ -28,11 +15,7 @@
 		<search position="replace"><![CDATA[elseif ($activation_status == 3)
 		fatal_lang_error('still_awaiting_approval', 'user');]]></search>
 		<add><![CDATA[elseif ($activation_status == 3)
-	{
-		$log = isset($modSettings['log_activation_error']) && !empty($modSettings['log_activation_error']);
-		$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
-		fatal_lang_error('still_awaiting_approval', ($log ? 'user' : false));
-	}]]></add>
+		fatal_lang_error('still_awaiting_approval', (!empty($modSettings['log_activation_error'] ? 'user' : false));]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[{
@@ -49,6 +32,40 @@
 				// Log an error so we know that it didn't go well in the error log.
 				if (isset($modSettings['log_incorrect_password']) && !empty($modSettings['log_incorrect_password']))
 					log_error($txt['incorrect_password']]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/ManageAttachments.php">
+	<operation>
+		<search position="before"><![CDATA[array('text', 'attachmentThumbHeight', 6),]]></search>
+		<add><![CDATA[
+		'',
+			array('check', 'log_attach_timeout_error'),]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/ManageSettings.php">
+	<operation>
+		<search position="replace"><![CDATA[array('check', 'securityDisable'),
+		'',]]></search>
+		<add><![CDATA[array('check', 'securityDisable'),
+		'',
+		array('check', 'log_activation_error'),
+		array('check', 'log_incorrect_password_error'),
+		array('check', 'log_email_provider_error'),
+		'',]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/Post.php">
+	<operation>
+		<search position="replace"><![CDATA[fatal_lang_error('attach_timeout', 'critical');]]></search>
+		<add><![CDATA[fatal_lang_error('attach_timeout', !empty($modSettings['log_attach_timeout_error']) ? 'critical' : false);]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[fatal_lang_error('attach_timeout', 'critical');]]></search>
+		<add><![CDATA[fatal_lang_error('attach_timeout', !empty($modSettings['log_attach_timeout_error']) ? 'critical' : false);]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[fatal_lang_error('attach_timeout', 'critical');]]></search>
+		<add><![CDATA[fatal_lang_error('attach_timeout', !empty($modSettings['log_attach_timeout_error']) ? 'critical' : false);]]></add>
 	</operation>
 </file>
 <file name="$sourcedir/Security.php">
@@ -60,9 +77,7 @@
 		<add><![CDATA[writeLog(true);
 
 		// You banned, sucka!
-		$log = !(isset($modSettings['log_is_banned_error']) && !empty($modSettings['log_is_banned_error']));
-		$modSettings['enableErrorLogging'] = ($log ? false : $modSettings['enableErrorLogging']);
-		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_access']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_access']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']), $log ? false : ]]></add>
+		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_access']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_access']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']), empty($modSettings['log_is_banned_error']) ? false : ]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[Logout(true, false);
@@ -70,25 +85,13 @@
 		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_login']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_login']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']) . '<br />' . $txt['ban_continue_browse'], ]]></search>
 		<add><![CDATA[Logout(true, false);
 
-		$log = !(isset($modSettings['log_is_banned_error']) && !empty($modSettings['log_is_banned_error']));
-		$modSettings['enableErrorLogging'] = ($log ? 0 : $modSettings['enableErrorLogging']);
-		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_login']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_login']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']) . '<br />' . $txt['ban_continue_browse'], $log ? false : ]]></add>
+		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_login']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_login']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']) . '<br />' . $txt['ban_continue_browse'], empty($modSettings['log_is_banned_error']) ? false : ]]></add>
 	</operation>
 	<operation>
 		<search position="before"><![CDATA[function isBannedEmail($email, $restriction, $error)
 {
 	global $txt, $smcFunc]]></search>
 		<add><![CDATA[, $modSettings]]></add>
-	</operation>
-	<operation>
-		<search position="replace"><![CDATA[$_SESSION['ban']['last_checked'] = time();
-
-		fatal_error(sprintf($txt['your_ban'], $txt['guest_title']) . $_SESSION['ban']['cannot_access']['reason'], false);]]></search>
-		<add><![CDATA[$_SESSION['ban']['last_checked'] = time();
-
-		$log = isset($modSettings['log_is_banned_error']) && !empty($modSettings['log_is_banned_error']);
-		$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
-		fatal_error(sprintf($txt['your_ban'], $txt['guest_title']) . $_SESSION['ban']['cannot_access']['reason'], false);]]></add>
 	</operation>
 </file>
 <file name="$sourcedir/Subs-BlockEmailUsernames.php" error="skip">

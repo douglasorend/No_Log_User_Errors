@@ -3,18 +3,8 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>dougiefresh:NoLogUser</id>
 <name>No Log Certain User Errors</name>
-<version>1.0.1</version>
+<version>1.1</version>
 
-<file name="$sourcedir/ManageSettings.php">
-	<operation>
-		<search position="after"><![CDATA[// Even do the pruning?]]></search>
-		<add><![CDATA[
-		array('check', 'log_activation_error'),
-		array('check', 'log_incorrect_password_error'),
-		array('check', 'log_email_provider_error'),
-		'',]]></add>
-	</operation>
-</file>
 <file name="$sourcedir/LogInOut.php">
 	<operation>
 		<search position="after"><![CDATA[log_error($txt['activate_not_completed1']]]></search>
@@ -25,11 +15,7 @@
 		<search position="replace"><![CDATA[elseif ($activation_status == 3)
 		fatal_lang_error('still_awaiting_approval', 'user');]]></search>
 		<add><![CDATA[elseif ($activation_status == 3)
-	{
-		$log = isset($modSettings['log_activation_error']) && !empty($modSettings['log_activation_error']);
-		$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
-		fatal_lang_error('still_awaiting_approval', ($log ? 'user' : false));
-	}]]></add>
+		fatal_lang_error('still_awaiting_approval', (!empty($modSettings['log_activation_error']) ? 'user' : false));]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[{
@@ -41,46 +27,55 @@
 					log_error($txt['incorrect_password']]]></add>
 	</operation>
 </file>
+<file name="$sourcedir/ManageAttachments.php">
+	<operation>
+		<search position="before"><![CDATA[array('int', 'max_image_height', 'subtext' => $txt['zero_for_no_limit']),]]></search>
+		<add><![CDATA[
+		'',
+			array('check', 'log_attach_timeout_error'),]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/ManageSettings.php">
+	<operation>
+		<search position="after"><![CDATA[// Even do the pruning?]]></search>
+		<add><![CDATA[
+		array('check', 'log_activation_error'),
+		array('check', 'log_incorrect_password_error'),
+		array('check', 'log_email_provider_error'),
+		'',]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/Post.php">
+	<operation>
+		<search position="after"><![CDATA[foreach ($attachmentOptions['errors'] as $error)]]></search>
+		<add><![CDATA[$log_these = array_diff($log_these, array(!empty($modSettings['log_attach_timeout_error']) ? 'attach_timeout' : false));
+				]]></add>
+	</operation>
+</file>
 <file name="$sourcedir/Subs-BlockEmailUsernames.php" error="skip">
 	<operation>
 		<search position="replace"><![CDATA[if ($block)
 				fatal_lang_error('registration_failed_email_provider1');]]></search>
 		<add><![CDATA[if ($block)
-			{
-				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
-				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
-				fatal_lang_error('registration_failed_email_provider1', ($log ? 'general' : false));
-			}]]></add>
+				fatal_lang_error('registration_failed_email_provider1', (!empty($modSettings['log_email_provider_error']) ? 'general' : false));]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[if (!$allow)
 				fatal_lang_error('registration_failed_email_provider1');]]></search>
 		<add><![CDATA[if (!$allow)
-			{
-				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
-				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
-				fatal_lang_error('registration_failed_email_provider1', ($log ? 'general' : false));
-			}]]></add>
+				fatal_lang_error('registration_failed_email_provider1', (!empty($modSettings['log_email_provider_error']) ? 'general' : false));]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[if (in_array($domain, $checkproviders))
 				fatal_lang_error('registration_failed_email_provider2');]]></search>
 		<add><![CDATA[if (in_array($domain, $checkproviders))
-			{
-				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
-				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
-				fatal_lang_error('registration_failed_email_provider2', ($log ? 'general' : false));
-			}]]></add>
+				fatal_lang_error('registration_failed_email_provider2', (!empty($modSettings['log_email_provider_error']) ? 'general' : false));]]></add>
 	</operation>
 	<operation>
 		<search position="replace"><![CDATA[if (!in_array($domain, $checkproviders))
 				fatal_lang_error('registration_failed_email_provider2');]]></search>
 		<add><![CDATA[if (!in_array($domain, $checkproviders))
-			{
-				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
-				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
-				fatal_lang_error('registration_failed_email_provider2', ($log ? 'general' : false));
-			}]]></add>
+				fatal_lang_error('registration_failed_email_provider2', (!empty($modSettings['log_email_provider_error']) ? 'general' : false));]]></add>
 	</operation>
 </file>
 </modification>

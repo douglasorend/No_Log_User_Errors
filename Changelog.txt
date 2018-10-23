@@ -1,3 +1,8 @@
+v1.1 - September 23rd, 2016
+o Added ability to block "attachment timeout" errors in the log.
+o Removed the "log if user is banned" option because SMF source didn't log those errors.
+o Removed some unnecessary/redundant code to streamline the operation.
+
 v1.0.1 - February 25th, 2016
 o Fixed documentation so that the correct area for admin controls are shown.
 
