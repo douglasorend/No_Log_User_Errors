@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>dougiefresh:NoLogUser</id>
+<name>No Log Certain User Errors</name>
+<version>1.0</version>
+
+<file name="$languagedir/ManageSettings.english.php">
+	<operation>
+		<search position="end" />
+		<add><![CDATA[$txt['log_activation_error'] = 'Log User Activation errors';
+$txt['log_incorrect_password_error'] = 'Log Incorrect Password errors';
+$txt['log_is_banned_error'] = 'Log Banned Users errors';
+$txt['log_email_provider_error'] = 'Log Email Provider errors';
+
+]]></add>
+	</operation>
+</file>
+</modification>

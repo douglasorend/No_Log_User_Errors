@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>dougiefresh:NoLogUser</id>
+<name>No Log Certain User Errors</name>
+<version>1.0</version>
+
+<file name="$sourcedir/ManageSettings.php">
+	<operation>
+		<search position="after"><![CDATA[// Even do the pruning?]]></search>
+		<add><![CDATA[
+		array('check', 'log_activation_error'),
+		array('check', 'log_incorrect_password_error'),
+		array('check', 'log_email_provider_error'),
+		'',]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/LogInOut.php">
+	<operation>
+		<search position="after"><![CDATA[log_error($txt['activate_not_completed1']]]></search>
+		<add><![CDATA[if (isset($modSettings['log_activation_error']) && !empty($modSettings['log_activation_error']))
+			]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[elseif ($activation_status == 3)
+		fatal_lang_error('still_awaiting_approval', 'user');]]></search>
+		<add><![CDATA[elseif ($activation_status == 3)
+	{
+		$log = isset($modSettings['log_activation_error']) && !empty($modSettings['log_activation_error']);
+		$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+		fatal_lang_error('still_awaiting_approval', ($log ? 'user' : false));
+	}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[{
+				// Log an error so we know that it didn't go well in the error log.
+				log_error($txt['incorrect_password']]]></search>
+		<add><![CDATA[{
+				// Log an error so we know that it didn't go well in the error log.
+				if (isset($modSettings['log_incorrect_password']) && !empty($modSettings['log_incorrect_password']))
+					log_error($txt['incorrect_password']]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/Subs-BlockEmailUsernames.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[if ($block)
+				fatal_lang_error('registration_failed_email_provider1');]]></search>
+		<add><![CDATA[if ($block)
+			{
+				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
+				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+				fatal_lang_error('registration_failed_email_provider1', ($log ? 'general' : false));
+			}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (!$allow)
+				fatal_lang_error('registration_failed_email_provider1');]]></search>
+		<add><![CDATA[if (!$allow)
+			{
+				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
+				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+				fatal_lang_error('registration_failed_email_provider1', ($log ? 'general' : false));
+			}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (in_array($domain, $checkproviders))
+				fatal_lang_error('registration_failed_email_provider2');]]></search>
+		<add><![CDATA[if (in_array($domain, $checkproviders))
+			{
+				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
+				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+				fatal_lang_error('registration_failed_email_provider2', ($log ? 'general' : false));
+			}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (!in_array($domain, $checkproviders))
+				fatal_lang_error('registration_failed_email_provider2');]]></search>
+		<add><![CDATA[if (!in_array($domain, $checkproviders))
+			{
+				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
+				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+				fatal_lang_error('registration_failed_email_provider2', ($log ? 'general' : false));
+			}]]></add>
+	</operation>
+</file>
+</modification>

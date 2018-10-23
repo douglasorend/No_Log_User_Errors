@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>dougiefresh:NoLogUser</id>
+<name>No Log Certain User Errors</name>
+<version>1.0</version>
+
+<file name="$sourcedir/ManageSettings.php">
+	<operation>
+		<search position="replace"><![CDATA[array('check', 'securityDisable'),
+		'',]]></search>
+		<add><![CDATA[array('check', 'securityDisable'),
+		'',
+		array('check', 'log_activation_error'),
+		array('check', 'log_incorrect_password_error'),
+		array('check', 'log_is_banned_error'),
+		array('check', 'log_email_provider_error'),
+		'',]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/LogInOut.php">
+	<operation>
+		<search position="after"><![CDATA[log_error($txt['activate_not_completed1']]]></search>
+		<add><![CDATA[if (isset($modSettings['log_activation_error']) && !empty($modSettings['log_activation_error']))
+			]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[elseif ($activation_status == 3)
+		fatal_lang_error('still_awaiting_approval', 'user');]]></search>
+		<add><![CDATA[elseif ($activation_status == 3)
+	{
+		$log = isset($modSettings['log_activation_error']) && !empty($modSettings['log_activation_error']);
+		$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+		fatal_lang_error('still_awaiting_approval', ($log ? 'user' : false));
+	}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[{
+				log_error($txt['incorrect_password']]]></search>
+		<add><![CDATA[{
+				if (isset($modSettings['log_incorrect_password']) && !empty($modSettings['log_incorrect_password']))
+					log_error($txt['incorrect_password']]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[{
+				// Log an error so we know that it didn't go well in the error log.
+				log_error($txt['incorrect_password']]]></search>
+		<add><![CDATA[{
+				// Log an error so we know that it didn't go well in the error log.
+				if (isset($modSettings['log_incorrect_password']) && !empty($modSettings['log_incorrect_password']))
+					log_error($txt['incorrect_password']]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/Security.php">
+	<operation>
+		<search position="replace"><![CDATA[writeLog(true);
+
+		// You banned, sucka!
+		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_access']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_access']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']), ]]></search>
+		<add><![CDATA[writeLog(true);
+
+		// You banned, sucka!
+		$log = !(isset($modSettings['log_is_banned_error']) && !empty($modSettings['log_is_banned_error']));
+		$modSettings['enableErrorLogging'] = ($log ? false : $modSettings['enableErrorLogging']);
+		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_access']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_access']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']), $log ? false : ]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[Logout(true, false);
+
+		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_login']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_login']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']) . '<br />' . $txt['ban_continue_browse'], ]]></search>
+		<add><![CDATA[Logout(true, false);
+
+		$log = !(isset($modSettings['log_is_banned_error']) && !empty($modSettings['log_is_banned_error']));
+		$modSettings['enableErrorLogging'] = ($log ? 0 : $modSettings['enableErrorLogging']);
+		fatal_error(sprintf($txt['your_ban'], $old_name) . (empty($_SESSION['ban']['cannot_login']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_login']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']) . '<br />' . $txt['ban_continue_browse'], $log ? false : ]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[function isBannedEmail($email, $restriction, $error)
+{
+	global $txt, $smcFunc]]></search>
+		<add><![CDATA[, $modSettings]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[$_SESSION['ban']['last_checked'] = time();
+
+		fatal_error(sprintf($txt['your_ban'], $txt['guest_title']) . $_SESSION['ban']['cannot_access']['reason'], false);]]></search>
+		<add><![CDATA[$_SESSION['ban']['last_checked'] = time();
+
+		$log = isset($modSettings['log_is_banned_error']) && !empty($modSettings['log_is_banned_error']);
+		$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+		fatal_error(sprintf($txt['your_ban'], $txt['guest_title']) . $_SESSION['ban']['cannot_access']['reason'], false);]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/Subs-BlockEmailUsernames.php" error="skip">
+	<operation>
+		<search position="replace"><![CDATA[if ($block)
+				fatal_lang_error('registration_failed_email_provider1');]]></search>
+		<add><![CDATA[if ($block)
+			{
+				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
+				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+				fatal_lang_error('registration_failed_email_provider1', ($log ? 'general' : false));
+			}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (!$allow)
+				fatal_lang_error('registration_failed_email_provider1');]]></search>
+		<add><![CDATA[if (!$allow)
+			{
+				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
+				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+				fatal_lang_error('registration_failed_email_provider1', ($log ? 'general' : false));
+			}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (in_array($domain, $checkproviders))
+				fatal_lang_error('registration_failed_email_provider2');]]></search>
+		<add><![CDATA[if (in_array($domain, $checkproviders))
+			{
+				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
+				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+				fatal_lang_error('registration_failed_email_provider2', ($log ? 'general' : false));
+			}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if (!in_array($domain, $checkproviders))
+				fatal_lang_error('registration_failed_email_provider2');]]></search>
+		<add><![CDATA[if (!in_array($domain, $checkproviders))
+			{
+				$log = isset($modSettings['log_email_provider_error']) && !empty($modSettings['log_email_provider_error']);
+				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
+				fatal_lang_error('registration_failed_email_provider2', ($log ? 'general' : false));
+			}]]></add>
+	</operation>
+</file>
+</modification>
