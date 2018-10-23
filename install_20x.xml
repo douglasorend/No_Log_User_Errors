@@ -3,8 +3,14 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>dougiefresh:NoLogUser</id>
 <name>No Log Certain User Errors</name>
-<version>1.3</version>
+<version>1.4</version>
 
+<file name="$boarddir/mobiquo/mobiquo_action.php" error="skip">
+	<operation error="ignore">
+		<search position="before"><![CDATA[fatal_error('Sorry, can not register new user with spam info.']]></search>
+		<add><![CDATA[, !empty($modSettings['log_cannot_register_spam'])]]></add>
+	</operation>
+</file>
 <file name="$sourcedir/LogInOut.php">
 	<operation>
 		<search position="after"><![CDATA[log_error($txt['activate_not_completed1']]]></search>
@@ -52,6 +58,8 @@
 			array('check', 'log_incorrect_password_error'),
 			array('check', 'log_email_provider_error'),
 			array('check', 'log_user_is_a_spam'),
+			array('check', 'log_cannot_register_spam'),
+			array('check', 'log_reserved_username'),
 		'',]]></add>
 	</operation>
 </file>
@@ -70,6 +78,10 @@
 	</operation>
 </file>
 <file name="$sourcedir/Register.php">
+	<operation error="ignore">
+		<search position="before"><![CDATA[fatal_error('Sorry, can not register new user with spam info.']]></search>
+		<add><![CDATA[, !empty($modSettings['log_cannot_register_spam'])]]></add>
+	</operation>
 	<operation error="ignore">
 		<search position="replace"><![CDATA[fatal_error(sprintf($txt['sfs_spam_detected'],$_POST['user'],$_POST['email'],$user_info['ip']), true);]]></search>
 		<add><![CDATA[fatal_error(sprintf($txt['sfs_spam_detected'],$_POST['user'],$_POST['email'],$user_info['ip']), !empty($modSettings['log_user_is_a_spam']));]]></add>
@@ -99,6 +111,12 @@
 {
 	global $txt, $smcFunc]]></search>
 		<add><![CDATA[, $modSettings]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/Subs-Auth.php">
+	<operation>
+		<search position="replace"><![CDATA[fatal_lang_error('username_reserved', true]]></search>
+		<add><![CDATA[fatal_lang_error('username_reserved', !empty($modSettings['log_reserved_username'])]]></add>
 	</operation>
 </file>
 <file name="$sourcedir/Subs-BlockEmailUsernames.php" error="skip">
@@ -141,6 +159,20 @@
 				$modSettings['enableErrorLogging'] = ($log ? $modSettings['enableErrorLogging'] : 0);
 				fatal_lang_error('registration_failed_email_provider2', ($log ? 'general' : false));
 			}]]></add>
+	</operation>
+</file>
+<file name="$sourcedir/Subs-Members.php">
+	<operation>
+		<search position="replace"><![CDATA[$reg_errors[] = array('lang', 'username_reserved', 'general', ]]></search>
+		<add><![CDATA[$reg_errors[] = array('lang', 'username_reserved', !empty($modSettings['log_reserved_username']) ? 'general' : false, ]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[fatal_lang_error('username_reserved', 'password', ]]></search>
+		<add><![CDATA[fatal_lang_error('username_reserved', !empty($modSettings['log_reserved_username']) ? 'password' : false, ]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[fatal_lang_error('username_reserved', 'password', ]]></search>
+		<add><![CDATA[fatal_lang_error('username_reserved', !empty($modSettings['log_reserved_username']) ? 'password' : false, ]]></add>
 	</operation>
 </file>
 </modification>

@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]NO LOG CERTAIN USER ERRORS v1.3[/b][/size][/color]
+[center][color=red][size=16pt][b]NO LOG CERTAIN USER ERRORS v1.4[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] -> [url=http://custom.simplemachines.org/mods/index.php?mod=4041]Link to Mod[/url]
 [/center]
 [hr]
@@ -11,7 +11,10 @@ This mod adds several new settings to the forum to allow admin to suppress some 
 New settings are in [b]Admin[/b] => [b]Configuration[/b] => [b]Security and Moderation[/b] => [b]General[/b]:
 o Log activation errors
 o Log incorrect password errors
-o Log Restricted Email Provider errors (only if [url=http://custom.simplemachines.org/mods/index.php?mod=1493]Restrict Email Providers on Registration[/url] mod is installed)
+o Log Restricted Email Provider errors (works if [url=http://custom.simplemachines.org/mods/index.php?mod=1493]Restrict Email Providers on Registration[/url] mod is installed)
+o Log Member Is A Spam error (works if [url=http://custom.simplemachines.org/mods/index.php?mod=1519]Stop Forum Spam[/url] mod is installed)
+o Log Cannot Register with Spam Name (works if [url=https://tapatalk.com/download_SimpleMachines.php]TapaTalk[/url] mod is installed)
+o Log reserved username errors
 
 New settings are in [b]Admin[/b] => [b]Forum[/b] => [b]Attachments and Avatars[/b] => [b]Attachment Settings[/b]:
 o Log attachment timeout errors

@@ -3,7 +3,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>dougiefresh:NoLogUser</id>
 <name>No Log Certain User Errors</name>
-<version>1.3</version>
+<version>1.4</version>
 
 <file name="$languagedir/Admin.english.php">
 	<operation>
@@ -20,7 +20,9 @@ $txt['log_attach_timeout_error'] = 'Log Attachment Timeout errors?';
 $txt['log_activation_error'] = 'Log User Activation errors';
 $txt['log_incorrect_password_error'] = 'Log Incorrect Password errors';
 $txt['log_email_provider_error'] = 'Log Email Provider errors';
-$txt['log_user_is_a_spam'] = 'Log Member Is A Spam error<div class="smalltext"><strong>NOTE:</strong> Occurs with Stop Forum Spam mod</div>';
+$txt['log_user_is_a_spam'] = 'Log Member Is A Spam error<div class="smalltext"><strong>NOTE:</strong> Only occurs with Stop Forum Spam mod</div>';
+$txt['log_cannot_register_spam'] = 'Log Cannot Register with Spam Name<div class="smalltext"><strong>NOTE:</strong> Only occurs with Tapatalk mod</div>';
+$txt['log_reserved_username'] = 'Log reserved username errors';
 ]]></add>
 	</operation>
 </file>

@@ -1,3 +1,8 @@
+v1.4 - November 26th, 2017
+o Added Spanish Latin translation, courtsey of [url=https://www.simplemachines.org/community/index.php?action=profile;u=322597]Rock Lee[/url]!
+o Added ability to suppress "Cannot Register with Spam info" error from Tapatalk.
+o Added ability to suppress "reserved username" errors.
+
 v1.3 - November 25th, 2017
 o Added ability to suppress "Member is a Spam" error from Stop Forum Spam mod.
 
